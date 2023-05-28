@@ -3,7 +3,7 @@ const connection = require("../../config/mysql");
 module.exports = {
   register: (data) =>
     new Promise((resolve, reject) => {
-      connection.query("INSERT INTO auth SET ?", data, (error, result) => {
+      connection.query("INSERT INTO user SET ?", data, (error, result) => {
         if (!error) {
           const newResult = {
             id: result.insertId,
@@ -19,7 +19,7 @@ module.exports = {
   getUserByEmail: (email) =>
     new Promise((resolve, reject) => {
       connection.query(
-        "SELECT * FROM auth WHERE email = ?",
+        "SELECT * FROM user WHERE email = ?",
         email,
         (error, result) => {
           if (!error) {
@@ -33,7 +33,7 @@ module.exports = {
     getUserId: (id) =>
     new Promise((resolve, reject) => {
       connection.query(
-        "SELECT * FROM auth WHERE id = ?",
+        "SELECT * FROM user WHERE id = ?",
         id,
         (err, result) => {
           if (!err) {
@@ -47,7 +47,7 @@ module.exports = {
     getAllUser: (limit, offset, search, sort) =>
     new Promise((resolve, reject) => {
       connection.query(
-        `SELECT * FROM auth WHERE namaDepan LIKE '%${search}%' ORDER BY ${sort} LIMIT ? OFFSET ?`,
+        `SELECT * FROM user WHERE namaDepan LIKE '%${search}%' ORDER BY ${sort} LIMIT ? OFFSET ?`,
         [limit, offset],
         (err, result) => {
           if (!err) {
@@ -61,12 +61,30 @@ module.exports = {
     getCountUser: (search) =>
     new Promise((resolve, reject) => {
       connection.query(
-        `SELECT COUNT(*) AS total FROM auth WHERE namaDepan LIKE '%${search}%'`,
+        `SELECT COUNT(*) AS total FROM user WHERE namaDepan LIKE '%${search}%'`,
         (err, result) => {
           if (!err) {
             resolve(result[0].total);
           } else {
             reject(new Error(`SQL : ${err.sqlMessage}`));
+          }
+        }
+      );
+    }),
+    updateUser: (data, id) =>
+    new Promise((resolve, reject) => {
+      connection.query(
+        "UPDATE user SET ? WHERE id = ?",
+        [data, id],
+        (error) => {
+          if (!error) {
+            const newResult = {
+              id,
+              ...data,
+            };
+            resolve(newResult);
+          } else {
+            reject(new Error(`SQL : ${error.sqlMessage}`));
           }
         }
       );

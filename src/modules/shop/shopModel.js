@@ -1,10 +1,10 @@
 const connection = require("../../config/mysql");
 
 module.exports = {
-  getProgressHtmlById: (id) =>
+  getShopByideUser: (id) =>
     new Promise((resolve, reject) => {
       connection.query(
-        "SELECT * FROM progresshtml WHERE idUser = ?",
+        "SELECT * FROM shop WHERE idUser = ?",
         id,
         (err, result) => {
           if (!err) {
@@ -15,10 +15,10 @@ module.exports = {
         }
       );
     }),
-  PostProgressHtml: (data) =>
+  PostShop: (data) =>
     new Promise((resolve, reject) => {
       const query = connection.query(
-        "INSERT INTO progresshtml SET ?",
+        "INSERT INTO shop SET ?",
         data,
         (error, result) => {
           if (!error) {
@@ -35,10 +35,10 @@ module.exports = {
       // eslint-disable-next-line no-console
       console.log(query.sql);
     }),
-  updateProgressHtml: (data, id) =>
+  updateShop: (data, id) =>
     new Promise((resolve, reject) => {
       connection.query(
-        "UPDATE progresshtml SET ? WHERE idUser = ?",
+        "UPDATE progress SET ? WHERE id_auth = ?",
         [data, id],
         (error) => {
           if (!error) {

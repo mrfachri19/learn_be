@@ -1,21 +1,14 @@
 const jwt = require("jsonwebtoken");
 const bcryptjs = require("bcryptjs");
 const helperWrapper = require("../../helper/wrapper");
-const authModel = require("./authModel.js");
+const authModel = require("./userModel");
 require("dotenv").config();
 
 module.exports = {
   register: async (req, res) => {
     try {
-      const {
-        namaDepan,
-        namaBelakang,
-        email,
-        password,
-        karakter,
-        alamat,
-        tentang,
-      } = req.body;
+      const { namaDepan, namaBelakang, email, password, point, karakter } =
+        req.body;
 
       // PROSES PENGECEKAN EMAIL SUDAH PERNAH TERDAFTAR ATAU BLM DI DATABASE
       const checkUser = await authModel.getUserByEmail(email);
@@ -40,10 +33,9 @@ module.exports = {
         namaBelakang,
         email,
         password: hashPassword,
+        point,
         karakter,
-        alamat,
-        tentang,
-        createdBy: new Date(Date.now()),
+        createdat: new Date(Date.now()),
       };
 
       const result = await authModel.register(setData);
@@ -107,7 +99,7 @@ module.exports = {
         alamat: payload.alamat,
         tentang: payload.tentang,
         createdby: payload.createdBy,
-        char: payload.karakter
+        char: payload.karakter,
       });
     } catch (error) {
       return helperWrapper.response(
@@ -165,12 +157,7 @@ module.exports = {
         totalData,
       };
 
-      const result = await authModel.getAllUser(
-        limit,
-        offset,
-        search,
-        sort
-      );
+      const result = await authModel.getAllUser(limit, offset, search, sort);
 
       if (result.length < 1) {
         return helperWrapper.response(res, 200, `Data not found !`, []);
@@ -188,6 +175,39 @@ module.exports = {
         res,
         400,
         `Bad request (${error.message})`,
+        null
+      );
+    }
+  },
+  updateUser: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const checkId = await authModel.updateUser;
+      if (checkId.length < 1) {
+        return helperWrapper.response(
+          res,
+          404,
+          `data by id ${id} not found !`,
+          null
+        );
+      }
+      const { point } = req.body;
+      const setData = {
+        point,
+      };
+      // untuk mengupdate salah satu field saja
+      Object.keys(setData).forEach((data) => {
+        if (!setData[data]) {
+          delete setData[data];
+        }
+      });
+      const result = await authModel.updateUser(setData, id);
+      return helperWrapper.response(res, 200, "succes update data", result);
+    } catch (error) {
+      return helperWrapper.response(
+        res,
+        400,
+        `bad request (${error.message})`,
         null
       );
     }
