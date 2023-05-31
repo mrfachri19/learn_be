@@ -100,6 +100,7 @@ module.exports = {
         tentang: payload.tentang,
         createdby: payload.createdBy,
         char: payload.karakter,
+        point: payload.point,
       });
     } catch (error) {
       return helperWrapper.response(
