@@ -8,6 +8,7 @@ Router.post("/login", authController.login);
 Router.get("/:id", authController.getUserId);
 Router.get("/", authController.getAllUser);
 Router.patch("/:id", authController.updateUser);
+Router.patch("/gambar/:id", authController.updateGambar);
 
 
 module.exports = Router;

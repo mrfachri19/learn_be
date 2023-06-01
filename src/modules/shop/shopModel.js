@@ -38,7 +38,25 @@ module.exports = {
   updateShop: (data, id) =>
     new Promise((resolve, reject) => {
       connection.query(
-        "UPDATE progress SET ? WHERE id_auth = ?",
+        "UPDATE progress SET ? WHERE idUser = ?",
+        [data, id],
+        (error) => {
+          if (!error) {
+            const newResult = {
+              id,
+              ...data,
+            };
+            resolve(newResult);
+          } else {
+            reject(new Error(`SQL : ${error.sqlMessage}`));
+          }
+        }
+      );
+    }),
+    updateKarakterShop: (data, id) =>
+    new Promise((resolve, reject) => {
+      connection.query(
+        "UPDATE shop SET ? WHERE idUser = ?",
         [data, id],
         (error) => {
           if (!error) {

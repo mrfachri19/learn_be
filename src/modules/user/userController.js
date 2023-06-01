@@ -213,4 +213,37 @@ module.exports = {
       );
     }
   },
+  updateGambar: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const checkId = await authModel.updateUser;
+      if (checkId.length < 1) {
+        return helperWrapper.response(
+          res,
+          404,
+          `data by id ${id} not found !`,
+          null
+        );
+      }
+      const { karakter } = req.body;
+      const setData = {
+        karakter,
+      };
+      // untuk mengupdate salah satu field saja
+      Object.keys(setData).forEach((data) => {
+        if (!setData[data]) {
+          delete setData[data];
+        }
+      });
+      const result = await authModel.updateUser(setData, id);
+      return helperWrapper.response(res, 200, "succes update data", result);
+    } catch (error) {
+      return helperWrapper.response(
+        res,
+        400,
+        `bad request (${error.message})`,
+        null
+      );
+    }
+  },
 };

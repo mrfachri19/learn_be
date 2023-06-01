@@ -5,6 +5,6 @@ const shopController = require("./shopController");
 
 Router.get("/:idUser", shopController.getShopByidUser);
 Router.post("/", shopController.postShop);
-Router.patch("/:id_auth", shopController.UpdateShop);
+Router.patch("/:idUser", shopController.UpdateKarakterShop);
 
 module.exports = Router;

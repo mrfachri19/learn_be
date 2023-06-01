@@ -92,7 +92,55 @@ module.exports = {
           delete setData[data];
         }
       });
-      const result = await progressHtmlModel.updateProgressHtml(
+      const result = await shopModel.updateKarakterShop(
+        setData,
+        idUser
+      );
+      return helperWrapper.response(res, 200, "succes update data", result);
+    } catch (error) {
+      return helperWrapper.response(
+        res,
+        400,
+        `bad request (${error.message})`,
+        null
+      );
+    }
+  },
+  UpdateKarakterShop: async (req, res) => {
+    try {
+      const { idUser } = req.params;
+      const checkId = shopModel.getShopByideUser;
+      if (checkId.length < 1) {
+        return helperWrapper.response(
+          res,
+          404,
+          `data by id ${idUser} not found !`,
+          null
+        );
+      }
+      const {
+        boy01,
+        boy02,
+        boy03,
+        girl01,
+        girl02,
+        girl03,
+      } = req.body;
+      const setData = {
+        boy01,
+        boy02,
+        boy03,
+        girl01,
+        girl02,
+        girl03,
+      };
+      // untuk mengupdate salah satu field saja
+      Object.keys(setData).forEach((data) => {
+        if (!setData[data]) {
+          delete setData[data];
+        }
+      });
+      const result = await shopModel.updateKarakterShop(
         setData,
         idUser
       );
